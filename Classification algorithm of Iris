@@ -1,0 +1,127 @@
+#import seaborn
+import warnings
+warnings.filterwarnings("ignore")
+import seaborn as sns
+import matplotlib.pyplot as plt
+%matplotlib inline
+In [17]:
+import matplotlib
+matplotlib.style.use('ggplot')
+In [18]:
+sns.set(style="white", color_codes=True)
+In [19]:
+#Next we will load the iris flower dataset from file
+iris=pd.read_csv("c:/Users/CSS/iris.csv")
+In [21]:
+iris.head()
+Out[21]:
+sepal_length	sepal_width	petal_length	petal_width	species
+0	5.1	3.5	1.4	0.2	setosa
+1	4.9	3.0	1.4	0.2	setosa
+2	4.7	3.2	1.3	0.2	setosa
+3	4.6	3.1	1.5	0.2	setosa
+4	5.0	3.6	1.4	0.2	setosa
+In [22]:
+type(iris)
+Out[22]:
+pandas.core.frame.DataFrame
+In [23]:
+iris["species"].value_counts()
+Out[23]:
+virginica     50
+setosa        50
+versicolor    50
+Name: species, dtype: int64
+In [24]:
+iris.describe()
+Out[24]:
+sepal_length	sepal_width	petal_length	petal_width
+count	150.00	150.00	150.00	150.00
+mean	5.84	3.06	3.76	1.20
+std	0.83	0.44	1.77	0.76
+min	4.30	2.00	1.00	0.10
+25%	5.10	2.80	1.60	0.30
+50%	5.80	3.00	4.35	1.30
+75%	6.40	3.30	5.10	1.80
+max	7.90	4.40	6.90	2.50
+In [25]:
+iris.groupby('species').describe().T
+Out[25]:
+species	setosa	versicolor	virginica
+petal_length	count	50.00	50.00	50.00
+mean	1.46	4.26	5.55
+std	0.17	0.47	0.55
+min	1.00	3.00	4.50
+25%	1.40	4.00	5.10
+50%	1.50	4.35	5.55
+75%	1.58	4.60	5.88
+max	1.90	5.10	6.90
+petal_width	count	50.00	50.00	50.00
+mean	0.25	1.33	2.03
+std	0.11	0.20	0.27
+min	0.10	1.00	1.40
+25%	0.20	1.20	1.80
+50%	0.20	1.30	2.00
+75%	0.30	1.50	2.30
+max	0.60	1.80	2.50
+sepal_length	count	50.00	50.00	50.00
+mean	5.01	5.94	6.59
+std	0.35	0.52	0.64
+min	4.30	4.90	4.90
+25%	4.80	5.60	6.23
+50%	5.00	5.90	6.50
+75%	5.20	6.30	6.90
+max	5.80	7.00	7.90
+sepal_width	count	50.00	50.00	50.00
+mean	3.43	2.77	2.97
+std	0.38	0.31	0.32
+min	2.30	2.00	2.20
+25%	3.20	2.52	2.80
+50%	3.40	2.80	3.00
+75%	3.68	3.00	3.18
+max	4.40	3.40	3.80
+In [26]:
+sns.jointplot(x="sepal_length", y="sepal_width", data=iris)
+C:\ProgramData\Anaconda3\lib\site-packages\matplotlib\axes\_axes.py:6462: UserWarning: The 'normed' kwarg is deprecated, and has been replaced by the 'density' kwarg.
+  warnings.warn("The 'normed' kwarg is deprecated, and has been "
+C:\ProgramData\Anaconda3\lib\site-packages\matplotlib\axes\_axes.py:6462: UserWarning: The 'normed' kwarg is deprecated, and has been replaced by the 'density' kwarg.
+  warnings.warn("The 'normed' kwarg is deprecated, and has been "
+Out[26]:
+<seaborn.axisgrid.JointGrid at 0xabfbcc0>
+
+In [27]:
+sns.FacetGrid(iris, hue="species", size=5) \
+   .map(plt.scatter, "sepal_length", "sepal_width") \
+   .add_legend()
+Out[27]:
+<seaborn.axisgrid.FacetGrid at 0xaf95ba8>
+
+In [28]:
+#look at individual feature in seaborn 
+sns.boxplot(x="species", y="petal_length", data=iris)
+Out[28]:
+<matplotlib.axes._subplots.AxesSubplot at 0xaf83c50>
+
+In [29]:
+sns.violinplot(x="species", y="petal_length", data=iris)
+Out[29]:
+<matplotlib.axes._subplots.AxesSubplot at 0xb0aa518>
+
+In [30]:
+sns.pairplot(iris,hue="species")
+Out[30]:
+<seaborn.axisgrid.PairGrid at 0xb09f780>
+
+In [31]:
+sns.pairplot(iris,hue="species", diag_kind="kde")
+Out[31]:
+<seaborn.axisgrid.PairGrid at 0xbbef8d0>
+
+In [32]:
+iris.boxplot(by="species", figsize=(12,6))
+Out[32]:
+array([[<matplotlib.axes._subplots.AxesSubplot object at 0x000000000DDE3390>,
+        <matplotlib.axes._subplots.AxesSubplot object at 0x000000000E342550>],
+       [<matplotlib.axes._subplots.AxesSubplot object at 0x000000000E35FB00>,
+        <matplotlib.axes._subplots.AxesSubplot object at 0x000000000E38F320>]],
+      dtype=object)
