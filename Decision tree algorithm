@@ -1,0 +1,94 @@
+#Regression
+from sklearn.datasets import load_boston
+from sklearn.model_selection import cross_val_score
+from sklearn.tree import DecisionTreeRegressor
+
+boston =  load_boston()
+regressor = DecisionTreeRegressor()
+print(cross_val_score(regressor, boston.data, boston.target, cv=10))
+[ 0.55066396  0.47780755 -1.65544869  0.42050047  0.67830765  0.34133677
+  0.2633485   0.32879634 -2.04443304 -0.94003043]
+In [3]:
+#Regression
+from sklearn.datasets import load_iris
+from sklearn.model_selection import cross_val_score
+from sklearn.tree import DecisionTreeRegressor
+
+iris =  load_iris()
+regressor = DecisionTreeRegressor()
+print(cross_val_score(regressor, iris.data, iris.target, cv=10))
+[1. 1. 1. 1. 0. 0. 1. 0. 0. 1.]
+In [11]:
+#clf means classifier(clf used bcoz datset contains species which is a classsification)
+from sklearn.datasets import load_iris
+from sklearn import tree
+iris = load_iris()
+clf = tree.DecisionTreeClassifier()
+clf = clf.fit(iris.data, iris.target)
+print(cross_val_score(clf, iris.data, iris.target, cv=10))
+[1.         0.93333333 1.         0.93333333 0.93333333 0.86666667
+ 0.93333333 0.93333333 1.         1.        ]
+In [ ]:
+#clf means classifier(clf used bcoz datset contains species which is a classsification)
+from sklearn.datasets import load_iris
+from sklearn import tree
+iris = load_iris()
+clf = tree.DecisionTreeClassifier()
+clf = clf.fit(iris.data, iris.target)
+print(cross_val_score(clf, iris.data, iris.target, cv=10))
+In [12]:
+# SingleTree
+
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn import tree
+from sklearn import datasets
+from sklearn.datasets
+
+iris = load_iris()
+clf = tree.DecisionTreeClassifier()
+clf = clf.fit(iris.data, iris.target)
+print(cross_val_score(clf, iris.data, iris.target, cv=10))
+  File "<ipython-input-12-65ccff9321c6>", line 7
+    from sklearn.datasets
+                         ^
+SyntaxError: invalid syntax
+In [13]:
+from sklearn import datasets
+from sklearn import tree
+model1 = DecisionTreeClassifier(max_depth=3)
+model1.fit(iris.data,iris.target)
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+<ipython-input-13-bfb81feb8a00> in <module>()
+      1 from sklearn import datasets
+      2 from sklearn import tree
+----> 3 model1 = DecisionTreeClassifier(max_depth=3)
+      4 model1.fit(iris.data,iris.target)
+
+NameError: name 'DecisionTreeClassifier' is not defined
+In [14]:
+    f = tree.export_graphviz(clf,
+out_file=f,feauture_names=iris.feature_names,class_names=
+['sentosa,'virginca','versica'])
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+<ipython-input-14-bbdd9159b19c> in <module>()
+      1 f = tree.export_graphviz(clf,
+----> 2 out                        )
+
+NameError: name 'out' is not defined
+In [15]:
+import graphviz 
+dot_data = tree.export_graphviz(clf, out_file=None) 
+graph = graphviz.Source(dot_data) 
+graph.render("iris")
+---------------------------------------------------------------------------
+ModuleNotFoundError                       Traceback (most recent call last)
+<ipython-input-15-c3d95f1d6cab> in <module>()
+----> 1 import graphviz
+      2 dot_data = tree.export_graphviz(clf, out_file=None)
+      3 graph = graphviz.Source(dot_data)
+      4 graph.render("iris")
+
+ModuleNotFoundError: No module named 'graphviz'
