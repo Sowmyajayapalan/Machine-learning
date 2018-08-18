@@ -1,0 +1,276 @@
+In [1]:
+###Standard Import
+%matplotlib inline
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# use seaborn plotting defaults
+import seaborn as sns; sns.set()
+In [2]:
+import pandas as pd
+import pylab as plt
+import numpy as np
+from scipy.spatial.distance import cdist, pdist
+from sklearn.cluster import KMeans
+
+
+df=pd.read_csv('C:/Users/Manisha/Documents/MLTraining_Data/winequality-red.csv',sep=';')
+
+X=df[list(df.columns)[:-1]]
+k = range(1,11)
+
+clusters = [KMeans(n_clusters = c,init = 'k-means++').fit(X) 
+            for c in k]
+centr_lst = [cc.cluster_centers_ for cc in clusters]
+
+k_distance = [cdist(X, cent, 'euclidean') for cent in centr_lst]
+clust_indx = [np.argmin(kd,axis=1) for kd in k_distance]
+distances = [np.min(kd,axis=1) for kd in k_distance]
+avg_within = [np.sum(dist)/X.shape[0] for dist in distances]
+
+kidx = 1
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.plot(k, avg_within, 'g*-')
+ax.plot(k[kidx], avg_within[kidx], marker='o', markersize=12, \
+markeredgewidth=2, markeredgecolor='r', markerfacecolor='None')
+plt.grid(True)
+plt.xlabel('Number of clusters')
+plt.ylabel('Average within-cluster sum of squares')
+plt.title('Elbow for KMeans clustering (Wine  Data)')
+Out[2]:
+Text(0.5,1,'Elbow for KMeans clustering (Wine  Data)')
+
+In [3]:
+from sklearn.metrics import silhouette_samples, silhouette_score
+range_n_clusters = [2, 3, 4, 5, 6,7,8]
+
+# Compute the silhouette scores for each sample
+for n_clusters in range_n_clusters:
+    clusterer = KMeans(n_clusters=n_clusters, random_state=10)
+    cluster_labels = clusterer.fit_predict(X)
+    #sample_silhouette_values = silhouette_samples(X, cluster_labels)
+    #print("%d Cluster size %f ",n_clusters,sample_silhouette_values)
+    
+    silhouette_avg = silhouette_score(X, cluster_labels)
+    print("For n_clusters =", n_clusters,
+          "The average silhouette_score is :", silhouette_avg)
+from sklearn import metrics
+For n_clusters = 2 The average silhouette_score is : 0.6034220347331859
+For n_clusters = 3 The average silhouette_score is : 0.5213464032518718
+For n_clusters = 4 The average silhouette_score is : 0.48545959739945954
+For n_clusters = 5 The average silhouette_score is : 0.4472117094044474
+For n_clusters = 6 The average silhouette_score is : 0.4485022265199822
+For n_clusters = 7 The average silhouette_score is : 0.40193178410616537
+For n_clusters = 8 The average silhouette_score is : 0.38111110100290996
+Note :The best value is 1 and the worst value is -1. Values near 0 indicate overlapping clusters. Negative values generally indicate that a sample has been assigned to the wrong cluster, as a different cluster is more similar.
+
+In [4]:
+import pandas as pd
+df = pd.read_csv('C:/Users/Manisha/Documents/MLTraining_Data/Camera.csv', sep=';')
+
+columns = ['Model', 'Date', 'MaxRes', 'LowRes', 'EffPix', 'ZoomW', 'ZoomT',
+         'NormalFR', 'MacroFR', 'Storage', 'Weight', 'Dimensions', 'Price']
+df.columns = columns
+df.head()
+Out[4]:
+Model	Date	MaxRes	LowRes	EffPix	ZoomW	ZoomT	NormalFR	MacroFR	Storage	Weight	Dimensions	Price
+0	Agfa ePhoto 1280	1997	1024.0	640.0	0.0	38.0	114.0	70.0	40.0	4.0	420.0	95.0	179.0
+1	Agfa ePhoto 1680	1998	1280.0	640.0	1.0	38.0	114.0	50.0	0.0	4.0	420.0	158.0	179.0
+2	Agfa ePhoto CL18	2000	640.0	0.0	0.0	45.0	45.0	0.0	0.0	2.0	0.0	0.0	179.0
+3	Agfa ePhoto CL30	1999	1152.0	640.0	0.0	35.0	35.0	0.0	0.0	4.0	0.0	0.0	269.0
+4	Agfa ePhoto CL30 Clik!	1999	1152.0	640.0	0.0	43.0	43.0	50.0	0.0	40.0	300.0	128.0	1299.0
+In [5]:
+df.describe()
+Out[5]:
+Date	MaxRes	LowRes	EffPix	ZoomW	ZoomT	NormalFR	MacroFR	Storage	Weight	Dimensions	Price
+count	1038.000000	1038.000000	1038.000000	1038.000000	1038.000000	1038.000000	1038.000000	1037.000000	1036.000000	1036.000000	1036.000000	1038.000000
+mean	2003.590559	2474.672447	1773.936416	4.596339	32.963391	121.525048	44.145472	7.787850	17.447876	319.265444	105.363417	457.384393
+std	2.724755	759.513608	830.897955	2.844044	10.333149	93.455422	24.141959	8.100081	27.440655	260.410137	24.262761	760.452918
+min	1994.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	14.000000
+25%	2002.000000	2048.000000	1120.000000	3.000000	35.000000	96.000000	30.000000	3.000000	8.000000	180.000000	92.000000	149.000000
+50%	2004.000000	2560.000000	2048.000000	4.000000	36.000000	108.000000	50.000000	6.000000	16.000000	226.000000	101.000000	199.000000
+75%	2006.000000	3072.000000	2560.000000	7.000000	38.000000	117.000000	60.000000	10.000000	20.000000	350.000000	115.000000	399.000000
+max	2007.000000	5616.000000	4992.000000	21.000000	52.000000	518.000000	120.000000	85.000000	450.000000	1860.000000	240.000000	7999.000000
+In [6]:
+df['Model'] = df['Model'].apply(lambda s:s.split()[0])
+df['Model']=df['Model'].astype('object')
+df.dtypes
+Out[6]:
+Model          object
+Date            int64
+MaxRes        float64
+LowRes        float64
+EffPix        float64
+ZoomW         float64
+ZoomT         float64
+NormalFR      float64
+MacroFR       float64
+Storage       float64
+Weight        float64
+Dimensions    float64
+Price         float64
+dtype: object
+In [7]:
+df1=df.drop(["Model", "Date"], axis=1)
+df2=df1.dropna()
+In [8]:
+df.shape
+Out[8]:
+(1038, 13)
+In [9]:
+## Dimension Reduction 
+
+from sklearn.decomposition import PCA
+pca = PCA(n_components=5)
+pca.fit(df2)
+print("explained_variance")
+print(pca.explained_variance_ratio_)
+print("Components")
+print(pca.components_)
+explained_variance
+[0.62424922 0.29280832 0.05466678 0.02330201 0.00416335]
+Components
+[[ 6.53737141e-01  7.20858960e-01  2.36333946e-03 -3.38883346e-03
+   7.34742049e-03 -4.52378280e-03 -2.59893216e-03  3.59907825e-03
+   2.46009613e-02 -2.60557259e-04  2.28634224e-01]
+ [-1.25384784e-01 -1.95264459e-01 -4.13315656e-04 -5.48171673e-03
+  -2.91444145e-02 -7.67014840e-03 -2.61885218e-04 -6.03789168e-03
+   1.76583559e-01  1.03958241e-02  9.55973665e-01]
+ [ 7.04994558e-01 -6.19856431e-01  2.20394828e-03 -1.19866987e-02
+  -3.33594803e-02 -1.32007015e-02 -2.48403578e-03  5.82210663e-04
+   3.28028313e-01  2.16656939e-02 -9.61589310e-02]
+ [-2.42645194e-01  2.36377460e-01 -1.12356454e-03 -1.96945538e-02
+   6.07941237e-02 -2.72625668e-02 -6.25447800e-03 -1.55448187e-02
+   9.23524304e-01  6.09832557e-02 -1.53374829e-01]
+ [ 2.99860410e-02 -4.61356135e-02  7.05369054e-04  3.86308424e-02
+   9.94901129e-01  4.30997208e-02 -3.45596981e-03  2.88259643e-02
+  -3.62555122e-02 -2.40203465e-02  3.25475246e-02]]
+In [10]:
+import pandas as pd
+import pylab as plt
+import numpy as np
+from scipy.spatial.distance import cdist, pdist
+from sklearn.cluster import KMeans
+
+
+from sklearn.metrics import silhouette_samples, silhouette_score
+In [11]:
+range_n_clusters = [2, 3, 4, 5, 6,7,8,9,10]
+
+# Compute the silhouette scores for each sample
+for n_clusters in range_n_clusters:
+    clusterer = KMeans(n_clusters=n_clusters, random_state=10)
+    cluster_labels = clusterer.fit_predict(df2)
+    #sample_silhouette_values = silhouette_samples(X, cluster_labels)
+    #print("%d Cluster size %f ",n_clusters,sample_silhouette_values)
+    
+    silhouette_avg = silhouette_score(df2, cluster_labels)
+    print("For n_clusters =", n_clusters,
+          "The average silhouette_score is :", silhouette_avg)
+from sklearn import metrics
+For n_clusters = 2 The average silhouette_score is : 0.4454927552928927
+For n_clusters = 3 The average silhouette_score is : 0.4696276350976019
+For n_clusters = 4 The average silhouette_score is : 0.374181143849341
+For n_clusters = 5 The average silhouette_score is : 0.41634313702682096
+For n_clusters = 6 The average silhouette_score is : 0.4252714985590806
+For n_clusters = 7 The average silhouette_score is : 0.3819442622670352
+For n_clusters = 8 The average silhouette_score is : 0.40322630877073457
+For n_clusters = 9 The average silhouette_score is : 0.4053435811828225
+For n_clusters = 10 The average silhouette_score is : 0.4158390899680507
+In [12]:
+k = range(1,11)
+
+clusters = [KMeans(n_clusters = c,init = 'k-means++').fit(df2) 
+            for c in k]
+centr_lst = [cc.cluster_centers_ for cc in clusters]
+
+k_distance = [cdist(df2, cent, 'euclidean') for cent in centr_lst]
+clust_indx = [np.argmin(kd,axis=1) for kd in k_distance]
+distances = [np.min(kd,axis=1) for kd in k_distance]
+avg_within = [np.sum(dist)/df2.shape[0] for dist in distances]
+
+kidx = 2
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.plot(k, avg_within, 'g*-')
+ax.plot(k[kidx], avg_within[kidx], marker='o', markersize=12, \
+markeredgewidth=2, markeredgecolor='r', markerfacecolor='None')
+plt.grid(True)
+plt.xlabel('Number of clusters')
+plt.ylabel('Average within-cluster sum of squares')
+plt.title('Elbow for KMeans clustering (Camera  Data)')
+Out[12]:
+Text(0.5,1,'Elbow for KMeans clustering (Camera  Data)')
+
+In [13]:
+from sklearn import cluster
+k_means = cluster.KMeans(n_clusters=3)
+kmf=k_means.fit(df2)
+
+P_kmeans = kmf.predict(df2)
+In [14]:
+#P_kmeans=P_kmeans.astype('object')
+Clust=pd.DataFrame(P_kmeans)
+In [25]:
+dfwithClust=pd.concat([df,Clust], axis=1)
+dfwithClust.rename(columns={0:'Clust'},inplace=True)
+
+dfwithClust.head()
+Out[25]:
+Model	Date	MaxRes	LowRes	EffPix	ZoomW	ZoomT	NormalFR	MacroFR	Storage	Weight	Dimensions	Price	Clust
+0	Agfa	1997	1024.0	640.0	0.0	38.0	114.0	70.0	40.0	4.0	420.0	95.0	179.0	1.0
+1	Agfa	1998	1280.0	640.0	1.0	38.0	114.0	50.0	0.0	4.0	420.0	158.0	179.0	1.0
+2	Agfa	2000	640.0	0.0	0.0	45.0	45.0	0.0	0.0	2.0	0.0	0.0	179.0	1.0
+3	Agfa	1999	1152.0	640.0	0.0	35.0	35.0	0.0	0.0	4.0	0.0	0.0	269.0	1.0
+4	Agfa	1999	1152.0	640.0	0.0	43.0	43.0	50.0	0.0	40.0	300.0	128.0	1299.0	1.0
+In [16]:
+dfwithClust.Clust.value_counts()
+Out[16]:
+0.0    550
+1.0    471
+2.0     15
+Name: Clust, dtype: int64
+In [17]:
+!pip install hypertools
+Requirement already satisfied: hypertools in c:\users\manisha\anaconda3\lib\site-packages (0.5.0)
+Requirement already satisfied: six in c:\users\manisha\anaconda3\lib\site-packages (from hypertools) (1.11.0)
+Requirement already satisfied: scikit-learn>=0.19.1 in c:\users\manisha\anaconda3\lib\site-packages (from hypertools) (0.19.1)
+Requirement already satisfied: PPCA>=0.0.2 in c:\users\manisha\anaconda3\lib\site-packages (from hypertools) (0.0.3)
+Requirement already satisfied: deepdish in c:\users\manisha\anaconda3\lib\site-packages (from hypertools) (0.3.6)
+Requirement already satisfied: pandas>=0.18.0 in c:\users\manisha\anaconda3\lib\site-packages (from hypertools) (0.22.0)
+Requirement already satisfied: numpy>=1.10.4 in c:\users\manisha\anaconda3\lib\site-packages (from hypertools) (1.14.3)
+Requirement already satisfied: umap-learn>=0.1.5 in c:\users\manisha\anaconda3\lib\site-packages (from hypertools) (0.2.3)
+Requirement already satisfied: matplotlib>=1.5.1 in c:\users\manisha\anaconda3\lib\site-packages (from hypertools) (2.1.2)
+Requirement already satisfied: hdbscan>=0.8.11 in c:\users\manisha\anaconda3\lib\site-packages (from hypertools) (0.8.13)
+Requirement already satisfied: scipy>=1.0.0 in c:\users\manisha\anaconda3\lib\site-packages (from hypertools) (1.0.0)
+Requirement already satisfied: requests in c:\users\manisha\anaconda3\lib\site-packages (from hypertools) (2.18.4)
+Requirement already satisfied: future in c:\users\manisha\anaconda3\lib\site-packages (from hypertools) (0.16.0)
+Requirement already satisfied: seaborn>=0.8.1 in c:\users\manisha\anaconda3\lib\site-packages (from hypertools) (0.8.1)
+Requirement already satisfied: tables in c:\users\manisha\anaconda3\lib\site-packages (from deepdish->hypertools) (3.4.2)
+Requirement already satisfied: python-dateutil>=2 in c:\users\manisha\anaconda3\lib\site-packages (from pandas>=0.18.0->hypertools) (2.6.1)
+Requirement already satisfied: pytz>=2011k in c:\users\manisha\anaconda3\lib\site-packages (from pandas>=0.18.0->hypertools) (2017.3)
+Requirement already satisfied: numba>=0.34 in c:\users\manisha\anaconda3\lib\site-packages (from umap-learn>=0.1.5->hypertools) (0.36.2)
+Requirement already satisfied: cycler>=0.10 in c:\users\manisha\anaconda3\lib\site-packages (from matplotlib>=1.5.1->hypertools) (0.10.0)
+Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.1 in c:\users\manisha\anaconda3\lib\site-packages (from matplotlib>=1.5.1->hypertools) (2.2.0)
+Requirement already satisfied: chardet<3.1.0,>=3.0.2 in c:\users\manisha\anaconda3\lib\site-packages (from requests->hypertools) (3.0.4)
+Requirement already satisfied: idna<2.7,>=2.5 in c:\users\manisha\anaconda3\lib\site-packages (from requests->hypertools) (2.6)
+Requirement already satisfied: urllib3<1.23,>=1.21.1 in c:\users\manisha\anaconda3\lib\site-packages (from requests->hypertools) (1.22)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\manisha\anaconda3\lib\site-packages (from requests->hypertools) (2018.1.18)
+Requirement already satisfied: numexpr>=2.5.2 in c:\users\manisha\anaconda3\lib\site-packages (from tables->deepdish->hypertools) (2.6.4)
+Requirement already satisfied: llvmlite in c:\users\manisha\anaconda3\lib\site-packages (from numba>=0.34->umap-learn>=0.1.5->hypertools) (0.21.0)
+In [18]:
+import pandas as pd
+import numpy as np
+import hypertools as hyp
+import seaborn as sns
+
+sns.set(style="darkgrid")
+%matplotlib inline
+In [19]:
+ClustNumber=dfwithClust.pop('Clust')
+In [20]:
+geo = hyp.plot(dfwithClust, '.')
